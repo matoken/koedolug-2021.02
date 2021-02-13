@@ -1,0 +1,343 @@
+=  DroidCamでもスマホをWebCamにする
+Kenichiro Matohara(matoken) <maroken@kagolug.org>
+:revnumber: 1.0
+:revdate: 2021-02-13(Sat)
+:revremark: 小江戸らぐ 2021.02「{doctitle}」
+:homepage: https://matoken.org/
+:imagesdir: resources
+:data-uri:
+:example-caption: 例
+:table-caption: 表
+:figure-caption: 図
+:backend: revealjs
+:revealjs_theme: serif
+:customcss: resources/my-css.css
+:revealjs_slideNumber: c/t
+:title-slide-transition: none
+:icons: font
+:revealjs_hash: true
+:revealjs_center: true
+:revealjs_autoPlayMedia: true
+:revealjs_transition: false  
+:revealjs_transitionSpeed: fast
+
+== link:https://matoken.org[Kenichiro Matohara(matoken) https://matoken.org]
+
+image::map.jpg[background, size=cover]
+
+* 南隅から参加(鹿児島の右下)
+* 好きなLinuxディストリビューションはDebian
+* お仕事募集 mailto:work@matohara.org
+
+== 鹿児島らぐ https://kagolug.org/
+
+* オンラインで開催中
+** link:https://kagolug.connpass.com/event/203393/[鹿児島Linux勉強会 2021.02(オンライン開催)] 2021-02-21(sun)
+** link:https://event.ospn.jp/osc2021-online-spring/[オープンソースカンファレンス2021 Online/Spring] 2021-03-06(sat) 14:00〜14:45
+
+== 最近の発表
+
+* 「link:https://www.edocr.com/v/47o8nae4[VeraCryptをzuluCryptで]」 link:https://koedolug.connpass.com/event/198954/[小江戸らぐ 1月のオフな集まり(第222回)] 2021-01-09
+* 「link:https://www.edocr.com/v/kwbbxp9n/matoken/BitbarSwiftBarLinux[Bitbar/SwiftBarをLinuxでも使いたい」] link:https://tokaidolug.connpass.com/event/198980/[東海道らぐ　あひる焼きさんのライトニングトークダービー！] 2021-01-23
+* 「link:https://www.edocr.com/v/jdemba8j/matoken/USB[ネットワーク経由でUSB共有]」 link:https://kagolug.connpass.com/event/200913/[鹿児島Linux勉強会 2021.01(オンライン開催)]　2021-01-31
+
+== DroidCamでもスマホをWebCamにする
+
+== USB port死にかけ?
+
+* スマホや2.5インチHDDを繋ぐと勝手に切れてしまう
+* スマホは数秒毎に充電ランプが付いたり消えたり
+* Webcamがビデオチャット中に使えなくなったり
+* 自己給電の3.5インチHDDは調子がいいような?
+* しばらく放置したり再起動すると直ったり?
+* USB周りのリセッタブルヒューズとかコンデンサとかが死にかけている?
+
+== 正攻法
+
+* 端末買い替え
+* USB portを増設
+** PCI Express/PC Card/Express Card
+
+懐が寂しい&増設できないマシン（◞‸◟）
+
+== そういえばネットワーク経由でUSBが共有できたはず
+
+* 「link:https://www.edocr.com/v/jdemba8j/matoken/USB[ネットワーク経由でUSB共有]」 link:https://kagolug.connpass.com/event/200913/[鹿児島Linux勉強会 2021.01(オンライン開催)]　2021-01-31
+
+////
+
+== USB/IP
+
+* ネットワーク経由でUSBを共有
+* LinuxからLinuxに共有
+* LinuxからWindows(とReactOS)に共有
+* Linuxでは3.17からメインラインkernelに入った
+
+link:http://usbip.sourceforge.net/[USB/IP Project]
+
+=== !
+
+.https://en.opensuse.org/SDB:USBIP
+image::https://en.opensuse.org/images/c/c5/Usbip_arch.jpg[]
+
+////
+
+////
+image:http://usbip.sourceforge.net/images/usbip-design.png[]
+
+http://usbip.sourceforge.net/images/usbip-design.png
+////
+
+
+[ditaa]
+....
++--------+        +------------+       +---------------------+
+| WebCam +------->+ USB HostPC |       | USB ClientPC        |
+| C270   |  USB   |------------+       +---------------------+
++--------+        | USB/IP     |------>| USB/IP              |
+                  +------------+ 1GbE  +--+------------------|  
+                                       |  +-->UVC/UAC        |
+                                       +-------+-------------|
+                                       |       +-->Video APP |
+                                       +---------------------+
+....
+
+== USB/IP少し試してみて
+
+* 設定してしまえばローカルとほとんど変わらない使用感
+* 別マシンが必要
+* UVCを使うならそこそこ太い回線が必要(1Gbpsあれば安心)
+
+帯域がもったいない，エンコードするとずっと細い回線で高画質にできるよね  +
+バックアップもほしい
+
+== スマートフォンの利用
+
+スマートフォンを有線，ネットワーク経由でWebCamとして利用
+
+* Iriun Webcam
+** Android/iOS -> Linux/macOS/Windowsへ
+* DroidCam
+** Android/iOS -> Linux/Windowsへ
+
+=== !
+
+「link:https://www.edocr.com/v/lg7pq77l/matoken/LinuxPC-Iriun-Webcam[スマートフォンをLinuxPCのウェブカメラとして使う Iriun Webcam]」 小江戸らぐ 2020-04で発表
+
+このときはDroidCamは専用kernel moduleが必要でめんどくさそうなので標準moduleが利用できるIriun Webcamを選択
+
+それから約10ヶ月
+
+=== Iriun Webcamの問題
+
+* Debianパッケージがsidで依存関係が解決できなくなっている
+** 手動で依存関係を解決してパッケージを展開してバイナリを実行することは可能
+* Video のみ(Audio機能がない)
+* closed source
+* 問い合わせ窓口が見当たらない
+
+== DroidCam
+
+link:http://www.dev47apps.com/[Dev47Apps]
+
+link:https://www.dev47apps.com/droidcam/linux/[Linux | Dev47Apps]
+
+* Android/iOS → Linux/Windowsへ共有
+* Video/Audio対応
+* 専用moduleが必要だったがlink:https://github.com/dev47apps/droidcam/releases/tag/v1.6[v1.6+]で通常のv4l2loopbackが利用できるようになった
+* 専用モジュールもDKMS使えばそう不便でもない?
+
+
+== 導入
+
+sourceを入手してインストールスクリプトを実行する(※amd64以外は要セルフビルド)
+
+[source, shell]
+----
+$ git clone https://github.com/dev47apps/droidcam/
+$ cd droidcam
+$ sudo ./install-client <1>
+$ sudo ./install-dkms <2>
+$ sudo ./install-video <3>
+$ sudo ./install-sound <4>
+----
+
+<1> DroidCam Clientアプリとアンインストールスクリプト( `/opt/droidcam-uninstall` )導入
+<2> droidcam module DKMS設定 ※オプション
+<3> droidcam module設定 ※オプション
+<4> サウンドモジュール設定(snd-aloop module自動読み込み) ※オプション
+
+=== v4l2loopback利用時
+
+[source, shell]
+----
+$ cat /etc/modules-load.d/v4l2loopback.conf 
+v4l2loopback <1>
+$ cat /etc/modprobe.d/v4l2loopback.conf 
+options v4l2loopback exclusive_caps=1 video_nr=6,7,8 card_label="Virtual Camera,v4l2loopback-7,v4l2loopback-8" <2>
+----
+
+<1> モジュール自動読み込み
+<2> ビデオ形式をGStreamer caps指定，複数デバイス対応(オプション)
+
+=== DroidCam v4l2loopback利用時
+
+[source, shell]
+----
+$ cat /etc/modules-load.d/droidcam.conf <1>
+videodev
+v4l2loopback_dc
+$ cat /etc/modprobe.d/droidcam.conf <2>
+options v4l2loopback_dc width=1920 height=1080 video_nr=9 card_label="DroidCam"
+----
+
+<1> モジュール自動読み込み
+<2> 解像度，ビデオデバイス番号，ラベル指定
+
+ビデオデバイス番号はv4l2loopbackより大きくするとOBS利用時にはまらない
+
+=== SecureBoot
+
+.MOKを作成して署名しないとモジュールが利用できない
+[source, shell]
+----
+$ sudo modprobe -v  v4l2loopback
+insmod /lib/modules/5.10.0-3-amd64/updates/dkms/v4l2loopback.ko exclusive_caps=1 video_nr=6,7,8 card_label="Virtual Camera,v4l2loopback-7,v4l2loopback-8" 
+modprobe: ERROR: could not insert 'v4l2loopback': Operation not permitted
+----
+
+* link:https://wiki.debian.org/SecureBoot[SecureBoot - Debian Wiki]
+
+=== Android側設定
+
+[.right]
+* Google Play Storeからアプリを導入 +
+link:https://play.google.com/store/apps/developer?id=Dev47Apps[Google Play での Dev47Apps の Android アプリ]  +
+image:Dev47Apps.jpg[width=60%]
+
+=== Androidアプリ起動
+
+image:DroidCam01.jpg[]
+
+=== PC側でdroidcam起動
+
+[source, shell]
+----
+$ droidcam
+----
+
+v4l2loopback_dc(or c4l2loopback)の一番小さな未使用のデバイスに割り当てられる
+
+image:https://wiki.matoken.org/_media/linux/20210114_23_01_29-4187613.jpg?w=400&tok=c133ae[]
+
+=== cliもある
+
+[source, shell]
+----
+$ droidcam-cli 
+Usage: 
+ droidcam-cli -l <port>
+   Listen on 'port' for connections (video only)
+
+ droidcam-cli [options] <ip> <port>
+   Connect via ip
+
+ droidcam-cli [options] adb <port>
+   Connect via adb to Android device
+
+ droidcam-cli [options] ios <port>
+   Connect via usbmuxd to iDevice
+
+Options:
+ -a          Enable Audio
+ -v          Enable Video
+             (only -v by default)
+
+ -size=WxH   Specify video size (when using the regular v4l2loopback module)
+             Ex: 640x480, 1280x720, 1920x1080
+
+Enter '?' for list of commands while streaming.
+----
+
+=== カメラの操作も可能 :)
+
+image:https://wiki.matoken.org/_media/linux/20210114_23_01_29-4187613-2.jpg?w=400&tok=8547f3[]
+
+== sound
+
+* Linux側でDroidCamを起動後， `snd_aloop` moduleと紐付ける
+
+----
+$ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=device.description=droidcam_audio
+----
+
+* 以下のISSUEが参考になる
+** link:https://github.com/dev47apps/droidcam/issues/60[Sound Support follow up · Issue #60 · dev47apps/droidcam]
+
+=== !
+
+[ditaa]
+....
++--------+        +------------+                 +------------+
+|Android +------->+ DdoidCam   +---------------->+ Video APP  |
+|DroidCam|  WiFi  +---+--------+  v4l2loopback   +------------+
++-----+--+   USB      |                          | Zoom.us    |
+      ^               |                          | Discord    |
+      +---------------+                          | Jitsi Meet |
+        Camera Coltrole                          | :          |
+                                                 +------------+
+                                
+                                
+....
+
+== OBS Studio update
+
+* 26.1からLinux/macOSに仮想カメラ機能が標準機能に(v4l2loopback利用)
+** ディストリビューションのバージョンが古い場合snapで導入が便利
+** droidcamのmoduleと競合して不具合が起こることがあるのでその場合はdroidcamのデバイス番号を後ろに  +
+`v4l2loopback -> /dev/video3`  +
+`v4l2loopback_dc -> /dev/video4`
+** ※以前からある仮想カメラプラグインのlink:https://github.com/CatxFish/obs-v4l2sink[obs-v4l2sink]は出力デバイスを選択できる
+* Wayland対応もうすぐ
+** link:https://www.phoronix.com/scan.php?page=news_item&px=OBS-Studio-Wayland-Renderer[OBS Studio Merges Its EGL-Wayland Code To Natively Support Wayland - Phoronix]
+
+=== DroidCam OBS
+
+* DroidCamをOBS Studioで利用する場合はOBS StudioにDroidCam OBS Pluginを導入して，Android側にDroidCam OBSを導入すると便利
+** link:http://dev47apps.com/obs/[DroidCam OBS by Dev47Apps] OBS Studio Plugin
+** link:https://play.google.com/store/apps/details?id=com.dev47apps.obsdroidcam[DroidCam OBS - Google Play のアプリ]
+
+
+=== !
+
+[ditaa]
+....
++------------+        +------------+                   +------------+
+|Android     +------->+ OBS Studio +------------------>+ Video APP  |
+|DroidCam OBS|  WiFi  |------------+   v4l2loopback    +------------+
++------------+   USB  | text       |                   | Zoom.us    |
+                      | Picture    |                   | Discord    |
+                      | Video      |                   | Jitsi Meet |
+                      | Desktop    |                   | :          |
+                      | Camera     |                   +------------+
+                      | <Filters>  |
+                      +------------+
+....
+
+== まとめ
+
+* USBポートを使わなくても USB/IP や スマートフォンでWebCam & Audio を利用できるようになった
+* どちらも毎回少し設定が必要なのが面倒
+* 安定度はUSB/IPの方が安定している
+* スマートフォンで直に参加という手も……でも画面小さいかな
+
+== 奥付
+
+発表::
+link:https://koedolug.connpass.com/event/201093/[小江戸らぐ 2月のオフな集まり(第223回)] 2021-02-13(sat)
+発表者::
+link:https://matoken.org/[Kenichiro Matohara(matoken)]
+スライド元Wiki::
+https://wiki.matoken.org/linux/virtual_camera
+ライセンス::
+CC BY-NC-SA 4.0

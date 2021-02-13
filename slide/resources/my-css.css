@@ -1,0 +1,12 @@
+@import url('https://use.fontawesome.com/releases/v5.14.0/css/all.css' integrity="sha384-3Nqiqht3ZZEO8FKj7GR1upiI385J92VwWNLj+FqHxtLYxd9l+WYpeqSOrLh0T12c" crossorigin="anonymous");
+@import url('http://mplus-fonts.sourceforge.jp/webfonts/general-j/mplus_webfonts.css');
+
+.reveal .slides {
+  font-family: monospace Bold, 'M+ Type-1 (general-j) Bold';
+  font-size: calc(28px + 0.25vw);
+}
+
+.reveal .slides h1,
+.reveal .slides h2 {
+  font-weight: 90%;
+}
