@@ -228,9 +228,11 @@ image:DroidCam01.jpg[width=80%]
 $ droidcam
 ----
 
-v4l2loopback_dc(or c4l2loopback)の一番小さな未使用のデバイスに割り当てられる
+image:DroidCam_GUI-01.jpg[]
 
-image:https://wiki.matoken.org/_media/linux/20210114_23_01_29-4187613.jpg?w=400&tok=c133ae[]
+=== カメラの操作も可能 :)
+
+image:DroidCam_GUI-02.jpg[]
 
 === cliもある
 
@@ -260,10 +262,6 @@ Options:
 
 Enter '?' for list of commands while streaming.
 ----
-
-=== カメラの操作も可能 :)
-
-image:https://wiki.matoken.org/_media/linux/20210114_23_01_29-4187613-2.jpg?w=400&tok=8547f3[]
 
 == sound
 
