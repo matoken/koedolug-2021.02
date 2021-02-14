@@ -219,7 +219,7 @@ image:Dev47Apps.jpg[width=70%]
 
 * カメラ，マイク切り替えや設定あり
 
-image:DroidCam01.jpg[width=80%]
+image:DroidCam01.jpg[width=50%]
 
 === PC側でdroidcam起動
 
@@ -268,7 +268,8 @@ Enter '?' for list of commands while streaming.
 * Linux側でDroidCamを起動後， `snd_aloop` moduleとPulseAudioを紐付ける
 
 ----
-$ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=device.description=droidcam_audio
+$ pacmd load-module module-alsa-source device=hw:Loopback,1,1 \
+        source_properties=device.description=droidcam_audio
 ----
 
 * 以下のISSUEが参考になる
