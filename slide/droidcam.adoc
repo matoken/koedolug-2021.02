@@ -213,11 +213,13 @@ modprobe: ERROR: could not insert 'v4l2loopback': Operation not permitted
 [.right]
 * Google Play Storeからアプリを導入 +
 link:https://play.google.com/store/apps/developer?id=Dev47Apps[Google Play での Dev47Apps の Android アプリ]  +
-image:Dev47Apps.jpg[width=60%]
+image:Dev47Apps.jpg[width=70%]
 
 === Androidアプリ起動
 
-image:DroidCam01.jpg[]
+* カメラ，マイク切り替えや設定あり
+
+image:DroidCam01.jpg[width=80%]
 
 === PC側でdroidcam起動
 
@@ -265,7 +267,7 @@ image:https://wiki.matoken.org/_media/linux/20210114_23_01_29-4187613-2.jpg?w=40
 
 == sound
 
-* Linux側でDroidCamを起動後， `snd_aloop` moduleと紐付ける
+* Linux側でDroidCamを起動後， `snd_aloop` moduleとPulseAudioを紐付ける
 
 ----
 $ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=device.description=droidcam_audio
@@ -281,7 +283,7 @@ $ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=
 +--------+        +------------+                 +------------+
 |Android +------->+ DdoidCam   +---------------->+ Video APP  |
 |DroidCam|  WiFi  +---+--------+  v4l2loopback   +------------+
-+-----+--+   USB      |                          | Zoom.us    |
++-----+--+   USB      |            snd_aloop     | Zoom.us    |
       ^               |                          | Discord    |
       +---------------+                          | Jitsi Meet |
         Camera Coltrole                          | :          |
@@ -295,8 +297,6 @@ $ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=
 * 26.1からLinux/macOSに仮想カメラ機能が標準機能に(v4l2loopback利用)
 ** ディストリビューションのバージョンが古い場合snapで導入が便利
 ** droidcamのmoduleと競合して不具合が起こることがあるのでその場合はdroidcamのデバイス番号を後ろに  +
-`v4l2loopback -> /dev/video3`  +
-`v4l2loopback_dc -> /dev/video4`
 ** ※以前からある仮想カメラプラグインのlink:https://github.com/CatxFish/obs-v4l2sink[obs-v4l2sink]は出力デバイスを選択できる
 * Wayland対応もうすぐ
 ** link:https://www.phoronix.com/scan.php?page=news_item&px=OBS-Studio-Wayland-Renderer[OBS Studio Merges Its EGL-Wayland Code To Natively Support Wayland - Phoronix]
@@ -315,7 +315,7 @@ $ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=
 +------------+        +------------+                   +------------+
 |Android     +------->+ OBS Studio +------------------>+ Video APP  |
 |DroidCam OBS|  WiFi  |------------+   v4l2loopback    +------------+
-+------------+   USB  | text       |                   | Zoom.us    |
++------------+   USB  | text       |    snd_aloop      | Zoom.us    |
                       | Picture    |                   | Discord    |
                       | Video      |                   | Jitsi Meet |
                       | Desktop    |                   | :          |
@@ -329,6 +329,7 @@ $ pacmd load-module module-alsa-source device=hw:Loopback,1,1 source_properties=
 * USBポートを使わなくても USB/IP や スマートフォンでWebCam & Audio を利用できるようになった
 * どちらも毎回少し設定が必要なのが面倒
 * 安定度はUSB/IPの方が安定している
+* 画質はスマートフォンの方が上(Logitch C270とRakuten miniでの比較)
 * スマートフォンで直に参加という手も……でも画面小さいかな
 
 == 奥付
